@@ -1,5 +1,5 @@
 body {
-	background-color: #E6F9E6;
+	background-color: #2ea5c7;
 }
 /* Add a dark background color with a little bit see-through */
 .navbar {
@@ -80,7 +80,7 @@ button:hover {
 }
 
 .products {
-	background-color: #E6F9E6 !important;
+	background-color: #2ea5c7 !important;
 	padding: 20px;
 }
 
@@ -99,7 +99,6 @@ button:hover {
 .productname {
 	color: green;
 	font-size: 15px;
-	font-family: fantasy;
 }
 
 .productinfo {
@@ -112,7 +111,7 @@ button:hover {
 @media only screen and (min-width: 601px) {
 	.tab {
 		border-radius: 10px;
-		background-color: #FFE5CC;
+		background-color: #FFFFFF;
 		font-weight: bold;
 		font-style: normal;
 		font-size: 20px;
@@ -127,7 +126,7 @@ button:hover {
 @media only screen and (max-width: 600px) {
 	.tab {
 		border-radius: 10px;
-		background-color: #FFE5CC;
+		background-color: #FFFFFF;
 		font-weight: bold;
 		font-style: normal;
 		font-size: 20px;

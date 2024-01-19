@@ -12,7 +12,7 @@
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </head>
-<body style="background-color: #E6F9E6;">
+<body style="background-color: #2ea5c7;">
 
 	<%@ include file="header.jsp"%>
 
@@ -24,7 +24,7 @@
 			style="margin-top: 5px; margin-left: 2px; margin-right: 2px;">
 			<form action="./LoginSrv" method="post"
 				class="col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2"
-				style="border: 2px solid black; border-radius: 10px; background-color: #FFE5CC; padding: 10px;">
+				style="border: 2px solid black; border-radius: 10px; background-color: #FFFFFF; padding: 10px;">
 				<div style="font-weight: bold;" class="text-center">
 					<h2 style="color: green;">Login Form</h2>
 					<%

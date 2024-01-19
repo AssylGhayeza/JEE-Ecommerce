@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Ellison Electronics</title>
+<title>Carrefour</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
@@ -16,46 +16,41 @@
 <script
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </head>
-<body style="background-color: #E6F9E6;">
+<body style="background-color: #2ea5c7;">
 
 	<%
-	/* Checking the user credentials */
-	String userName = (String) session.getAttribute("username");
-	String password = (String) session.getAttribute("password");
-	String userType = (String) session.getAttribute("usertype");
+	/* Validating user access */
+	String accountName = (String) session.getAttribute("username");
+	String accountPassword = (String) session.getAttribute("password");
+	String accountType = (String) session.getAttribute("usertype");
 
-	boolean isValidUser = true;
+	boolean accessGranted = accountType != null && accountName != null && accountPassword != null && accountType.equals("customer");
 
-	if (userType == null || userName == null || password == null || !userType.equals("customer")) {
+	ProductServiceImpl productService = new ProductServiceImpl();
+	List<ProductBean> productList = new ArrayList<>();
 
-		isValidUser = false;
-	}
-
-	ProductServiceImpl prodDao = new ProductServiceImpl();
-	List<ProductBean> products = new ArrayList<ProductBean>();
-
-	String search = request.getParameter("search");
-	String type = request.getParameter("type");
-	String message = "All Products";
-	if (search != null) {
-		products = prodDao.searchAllProducts(search);
-		message = "Showing Results for '" + search + "'";
-	} else if (type != null) {
-		products = prodDao.getAllProductsByType(type);
-		message = "Showing Results for '" + type + "'";
+	String searchQuery = request.getParameter("search");
+	String productType = request.getParameter("type");
+	String displayMessage = "";
+	if (searchQuery != null) {
+		productList = productService.searchAllProducts(searchQuery);
+		displayMessage = "Showing Results for '" + searchQuery + "'";
+	} else if (productType != null) {
+		productList = productService.getAllProductsByType(productType);
+		displayMessage = "Showing Results for '" + productType + "'";
 	} else {
-		products = prodDao.getAllProducts();
+		productList = productService.getAllProducts();
 	}
-	if (products.isEmpty()) {
-		message = "No items found for the search '" + (search != null ? search : type) + "'";
-		products = prodDao.getAllProducts();
+	if (productList.isEmpty()) {
+		displayMessage = "No items found for the search '" + (searchQuery != null ? searchQuery : productType) + "'";
+		productList = productService.getAllProducts();
 	}
 	%>
 
 	<jsp:include page="header.jsp" />
 
 	<div class="text-center"
-		style="color: black; font-size: 14px; font-weight: bold;"><%=message%></div>
+		style="color: black; font-size: 14px; font-weight: bold;"><%=displayMessage%></div>
 	<div class="text-center" id="message"
 		style="color: black; font-size: 14px; font-weight: bold;"></div>
 	<!-- Start of Product Items List -->
@@ -63,41 +58,41 @@
 		<div class="row text-center">
 
 			<%
-			for (ProductBean product : products) {
-				int cartQty = new CartServiceImpl().getCartItemCount(userName, product.getProdId());
+			for (ProductBean item : productList) {
+				int quantityInCart = new CartServiceImpl().getCartItemCount(accountName, item.getProdId());
 			%>
-			<div class="col-sm-4" style='height: 350px;'>
+			<div class="col-sm-3" style='height: 350px;'>
 				<div class="thumbnail">
-					<img src="./ShowImage?pid=<%=product.getProdId()%>" alt="Product"
-						style="height: 150px; max-width: 180px">
-					<p class="productname"><%=product.getProdName()%>
+					<img src="./ShowImage?pid=<%=item.getProdId()%>" alt="Product"
+						style="height: 160px; max-width: 180px">
+					<p class="productname"><%=item.getProdName()%>
 					</p>
 					<%
-					String description = product.getProdInfo();
-					description = description.substring(0, Math.min(description.length(), 100));
+					String productDescription = item.getProdInfo();
+					productDescription = productDescription.substring(0, Math.min(productDescription.length(), 100));
 					%>
-					<p class="productinfo"><%=description%>..
+					<p class="productinfo"><%=productDescription%>..
 					</p>
 					<p class="price">
-						Rs
-						<%=product.getProdPrice()%>
+						<%=item.getProdPrice()%>
+						TND
 					</p>
 					<form method="post">
 						<%
-						if (cartQty == 0) {
+						if (quantityInCart == 0) {
 						%>
 						<button type="submit"
-							formaction="./AddtoCart?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=1"
+							formaction="./AddtoCart?uid=<%=accountName%>&pid=<%=item.getProdId()%>&pqty=1"
 							class="btn btn-success">Add to Cart</button>
 						&nbsp;&nbsp;&nbsp;
 						<button type="submit"
-							formaction="./AddtoCart?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=1"
+							formaction="./AddtoCart?uid=<%=accountName%>&pid=<%=item.getProdId()%>&pqty=1"
 							class="btn btn-primary">Buy Now</button>
 						<%
 						} else {
 						%>
 						<button type="submit"
-							formaction="./AddtoCart?uid=<%=userName%>&pid=<%=product.getProdId()%>&pqty=0"
+							formaction="./AddtoCart?uid=<%=accountName%>&pid=<%=item.getProdId()%>&pqty=0"
 							class="btn btn-danger">Remove From Cart</button>
 						&nbsp;&nbsp;&nbsp;
 						<button type="submit" formaction="cartDetails.jsp"
@@ -106,6 +101,7 @@
 						}
 						%>
 					</form>
+					<br />
 					<br />
 				</div>
 			</div>
@@ -116,7 +112,7 @@
 
 		</div>
 	</div>
-	<!-- ENd of Product Items List -->
+	<!-- End of Product Items List -->
 
 
 	<%@ include file="footer.html"%>
