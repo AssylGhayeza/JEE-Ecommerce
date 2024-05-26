@@ -80,7 +80,7 @@
 					</p>
 					<p class="productinfo"><%=product.getProdInfo()%></p>
 					<p class="price">
-						Rs
+						TND
 						<%=product.getProdPrice()%>
 					</p>
 					<form method="post">

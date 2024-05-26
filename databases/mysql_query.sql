@@ -11,7 +11,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema ecommerce
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `ecommerce` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+CREATE SCHEMA IF NOT EXISTS `ecommerce` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci ;
 USE `ecommerce` ;
 
 -- -----------------------------------------------------
@@ -30,13 +30,13 @@ CREATE TABLE IF NOT EXISTS `ecommerce`.`product` (
   PRIMARY KEY (`pid`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+COLLATE = utf8mb4_unicode_520_ci;
 
 
 -- -----------------------------------------------------
 -- Table `ecommerce`.`orders`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ecommerce`.`orders` ;
+DROP TABLE IF EXISTS `ecommerce`.`orders`;
 
 CREATE TABLE IF NOT EXISTS `ecommerce`.`orders` (
   `orderid` VARCHAR(45) NOT NULL,
@@ -45,15 +45,15 @@ CREATE TABLE IF NOT EXISTS `ecommerce`.`orders` (
   `amount` DECIMAL(10,2) NULL DEFAULT NULL,
   `shipped` INT NOT NULL DEFAULT 0,
   PRIMARY KEY (`orderid`, `prodid`),
-  INDEX `productid_idx` (`prodid` ASC) VISIBLE,
+  INDEX `productid_idx` (`prodid` ASC),
   CONSTRAINT `productid`
     FOREIGN KEY (`prodid`)
     REFERENCES `ecommerce`.`product` (`pid`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_520_ci;
 
 
 -- -----------------------------------------------------
@@ -71,21 +71,21 @@ CREATE TABLE IF NOT EXISTS `ecommerce`.`user` (
   PRIMARY KEY (`email`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+COLLATE = utf8mb4_unicode_520_ci;
 
 
 -- -----------------------------------------------------
 -- Table `ecommerce`.`transactions`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ecommerce`.`transactions` ;
+DROP TABLE IF EXISTS `ecommerce`.`transactions`;
 
 CREATE TABLE IF NOT EXISTS `ecommerce`.`transactions` (
   `transid` VARCHAR(45) NOT NULL,
-  `username` VARCHAR(60) NULL DEFAULT NULL,
+  `username` VARCHAR(60) NULL DEFAULT NULL,  -- Make sure this matches the data type of `ecommerce`.`user`.`email`
   `time` DATETIME NULL DEFAULT NULL,
   `amount` DECIMAL(10,2) NULL DEFAULT NULL,
   PRIMARY KEY (`transid`),
-  INDEX `truserid_idx` (`username` ASC) VISIBLE,
+  INDEX `truserid_idx` (`username` ASC),  -- Removed VISIBLE keyword for compatibility
   CONSTRAINT `truserid`
     FOREIGN KEY (`username`)
     REFERENCES `ecommerce`.`user` (`email`)
@@ -95,23 +95,23 @@ CREATE TABLE IF NOT EXISTS `ecommerce`.`transactions` (
     FOREIGN KEY (`transid`)
     REFERENCES `ecommerce`.`orders` (`orderid`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_520_ci;
 
 
 -- -----------------------------------------------------
 -- Table `ecommerce`.`user_demand`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ecommerce`.`user_demand` ;
+DROP TABLE IF EXISTS `ecommerce`.`user_demand`;
 
 CREATE TABLE IF NOT EXISTS `ecommerce`.`user_demand` (
-  `username` VARCHAR(60) NOT NULL,
-  `prodid` VARCHAR(45) NOT NULL,
+  `username` VARCHAR(60) NOT NULL,  -- Ensure this matches the data type of `ecommerce`.`user`.`email`
+  `prodid` VARCHAR(45) NOT NULL,    -- Ensure this matches the data type of `ecommerce`.`product`.`pid`
   `quantity` INT NULL DEFAULT NULL,
   PRIMARY KEY (`username`, `prodid`),
-  INDEX `prodid_idx` (`prodid` ASC) VISIBLE,
+  INDEX `prodid_idx` (`prodid` ASC),  -- Removed VISIBLE keyword for compatibility
   CONSTRAINT `userdemailemail`
     FOREIGN KEY (`username`)
     REFERENCES `ecommerce`.`user` (`email`)
@@ -121,23 +121,23 @@ CREATE TABLE IF NOT EXISTS `ecommerce`.`user_demand` (
     FOREIGN KEY (`prodid`)
     REFERENCES `ecommerce`.`product` (`pid`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_520_ci;
 
 
 -- -----------------------------------------------------
 -- Table `ecommerce`.`usercart`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `ecommerce`.`usercart` ;
+DROP TABLE IF EXISTS `ecommerce`.`usercart`;
 
 CREATE TABLE IF NOT EXISTS `ecommerce`.`usercart` (
-  `username` VARCHAR(60) NULL DEFAULT NULL,
-  `prodid` VARCHAR(45) NULL DEFAULT NULL,
+  `username` VARCHAR(60) NULL DEFAULT NULL,  -- Ensure this matches the data type of `ecommerce`.`user`.`email`
+  `prodid` VARCHAR(45) NULL DEFAULT NULL,    -- Ensure this matches the data type of `ecommerce`.`product`.`pid`
   `quantity` INT NULL DEFAULT NULL,
-  INDEX `useremail_idx` (`username` ASC) VISIBLE,
-  INDEX `prodidcart_idx` (`prodid` ASC) VISIBLE,
+  INDEX `useremail_idx` (`username` ASC),  -- Removed VISIBLE keyword for compatibility
+  INDEX `prodidcart_idx` (`prodid` ASC),   -- Removed VISIBLE keyword for compatibility
   CONSTRAINT `useremail`
     FOREIGN KEY (`username`)
     REFERENCES `ecommerce`.`user` (`email`)
@@ -147,10 +147,10 @@ CREATE TABLE IF NOT EXISTS `ecommerce`.`usercart` (
     FOREIGN KEY (`prodid`)
     REFERENCES `ecommerce`.`product` (`pid`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_unicode_520_ci;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
