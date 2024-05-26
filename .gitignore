@@ -1,4 +1,1 @@
-/build/
-/target/
-databases/SHOPPING_CART_ERD.mwb.bak
-src/application.properties
+node_modules/
